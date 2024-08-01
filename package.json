@@ -1,0 +1,21 @@
+{
+  "name": "open-wabot",
+  "version": "1.0.0",
+  "description": "Open Source Unofficial WhatsApp BOT, built with Baileys",
+  "main": "main.ts",
+  "scripts": {
+    "start": "ts-node main.ts"
+  },
+  "author": "Gusti Randa",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "@hapi/boom": "^10.0.1",
+    "@whiskeysockets/baileys": "^6.7.5",
+    "node-fetch": "^3.3.2",
+    "pino": "^7.0.0",
+    "qrcode-terminal": "^0.12.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  }
+}
