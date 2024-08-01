@@ -11,6 +11,15 @@ export interface Msg {
   type: MessageUpsertType;
 }
 
+export type MessageType =
+  | "imageMessage"
+  | "videoMessage"
+  | "stickerMessage"
+  | "documentMessage"
+  | "audioMessage"
+  | "templateMessage"
+  | "buttonsMessage";
+
 export interface Serialized {
   id: string;
   isSelf: boolean;
@@ -34,7 +43,7 @@ export interface IRunMessage {
   args?: any;
   map: FeatureAttribute;
   command?: ICommandOptions;
-  groups?: GroupMetadata
+  groups?: GroupMetadata;
   clean?: string | undefined;
   prefix?: string | undefined;
   isGroup?: boolean | undefined;

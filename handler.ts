@@ -43,8 +43,10 @@ async function handler(
           isGroup ? "group" : "private"
         } chat`
       );
+      // logger.info(raw);
+    } else {
+      logger.info(`Message ${body} from ${sender}`);
     }
-    logger.info(`Message ${body} from ${sender}`);
 
     const prefixPattern = /^[°•π÷×¶∆£¢€¥®™+✓_=|~!?@#%^&.©^]/gi;
     const prefix = prefixPattern.test(body)

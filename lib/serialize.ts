@@ -17,13 +17,20 @@ async function serialize(
 ) {
   let isGroup: boolean = msg.key.remoteJid?.includes("@g.us") ?? false;
   let isSelf: boolean = msg.key.fromMe ?? false;
+  const mediaMessage =
+    msg?.message?.imageMessage ||
+    msg?.message?.videoMessage ||
+    msg?.message?.documentMessage;
   let message: Serialized = {
     id: msg.key.id ?? "",
     from: msg.key.remoteJid ?? "",
     isSelf: isSelf,
     isGroup: isGroup,
     sender: isGroup ? msg.key.participant ?? "" : msg.key.remoteJid ?? "",
-    body: msg.message?.conversation ?? "",
+    body:
+      msg.message?.conversation && msg.message?.conversation.trim() !== ""
+        ? msg.message?.conversation
+        : mediaMessage?.caption ?? msg.message?.extendedTextMessage?.text ?? "",
     raw: msg,
   };
   return message;
