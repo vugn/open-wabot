@@ -7,6 +7,7 @@ import { Boom } from "@hapi/boom";
 import Pino from "pino";
 import { FeatureAttribute } from "./types/attributes";
 import readFeatures from "./lib/readFeatures";
+import logger from "./lib/logger";
 
 // Initialize attributes object
 const attr: FeatureAttribute = {
@@ -156,15 +157,11 @@ async function connectToWhatsApp() {
     }
 
     sock.ev.on("messages.upsert", async (message) => {
-      console.log(message.messages[0]);
-      console.log(typeof sock);
-
-      //   require("./handler")(message, sock, attr);
+      //TODO Create Upsert Event
     });
 
     sock.ev.on("group-participants.update", async (message) => {
-      console.log(message);
-      // require("./system/welcome")(sock, message);
+      //TODO Create Group Event
     });
   } catch (error) {
     console.error(error);
