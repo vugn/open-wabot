@@ -1,8 +1,9 @@
 import { delay } from "@whiskeysockets/baileys";
 import fs from "fs";
 import path from "path";
-import { parseOptions } from "./utils";
 import { FeatureAttribute } from "../types/attributes";
+import { ICommandOptions, ICommandOptionsMap } from "../types/message";
+import { parseOptions } from "./utils";
 
 async function readFeatures(attr: FeatureAttribute) {
   try {
@@ -19,7 +20,7 @@ async function readFeatures(attr: FeatureAttribute) {
       // Retrieve the list of command files in the current feature
       const commands = fs
         .readdirSync(`${pathDir}/${feature}`)
-        .filter((file) => file.endsWith(".js"));
+        .filter((file) => file.endsWith(".ts"));
 
       // Iterate through each command file
       for (const file of commands) {
@@ -30,7 +31,7 @@ async function readFeatures(attr: FeatureAttribute) {
         if (typeof command.run !== "function") continue;
 
         // Define default command options
-        const defaultCmdOptions = {
+        const defaultCmdOptions: ICommandOptions = {
           name: "command",
           alias: [""],
           desc: "",
@@ -41,6 +42,7 @@ async function readFeatures(attr: FeatureAttribute) {
             typeof command.category === "undefined"
               ? ""
               : feature.toLowerCase(),
+          type: "",
           wait: false,
           isOwner: false,
           isAdmin: false,
@@ -50,14 +52,14 @@ async function readFeatures(attr: FeatureAttribute) {
           isQuery: false,
           isPrivate: false,
           isUrl: false,
-          run: () => {},
+          run: async () => {},
         };
 
         // Parse command options, filling in defaults
         const cmdOptions = parseOptions(defaultCmdOptions, command);
 
         // Extract relevant options for the command map
-        const options = Object.fromEntries(
+        const options: ICommandOptionsMap = Object.fromEntries(
           Object.entries(cmdOptions).filter(
             ([k, v]) =>
               typeof v === "boolean" || k === "query" || k === "isMedia"
@@ -65,7 +67,7 @@ async function readFeatures(attr: FeatureAttribute) {
         );
 
         // Create an object representing the command
-        const cmdObject = {
+        const cmdObject: ICommandOptions = {
           name: cmdOptions.name,
           alias: cmdOptions.alias,
           desc: cmdOptions.desc,
@@ -83,12 +85,10 @@ async function readFeatures(attr: FeatureAttribute) {
 
         // Introduce a delay for better command loading visualization
         await delay(2000);
-
         // Reload the command file for potential updates
         // global.reloadFile(`./commands/${feature}/${file}`);
       }
     }
-
     // Display a success message after loading commands
     console.log("Loading... Command loaded successfully.");
   } catch (error) {

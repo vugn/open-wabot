@@ -1,13 +1,14 @@
+import { Boom } from "@hapi/boom";
 import makeWASocket, {
   DisconnectReason,
-  useMultiFileAuthState,
   makeInMemoryStore,
+  useMultiFileAuthState,
 } from "@whiskeysockets/baileys";
-import { Boom } from "@hapi/boom";
 import Pino from "pino";
-import { FeatureAttribute } from "./types/attributes";
+import handler from "./handler";
 import readFeatures from "./lib/readFeatures";
-import logger from "./lib/logger";
+import { FeatureAttribute } from "./types/attributes";
+import { Msg } from "./types/message";
 
 // Initialize attributes object
 const attr: FeatureAttribute = {
@@ -156,8 +157,8 @@ async function connectToWhatsApp() {
       }
     }
 
-    sock.ev.on("messages.upsert", async (message) => {
-      //TODO Create Upsert Event
+    sock.ev.on("messages.upsert", async (message: Msg) => {
+      handler(message, sock, attr);
     });
 
     sock.ev.on("group-participants.update", async (message) => {

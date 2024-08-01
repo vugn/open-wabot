@@ -1,4 +1,6 @@
+import { ICommandOptions } from "./message";
+
 export interface FeatureAttribute {
   uptime: Date;
-  command: Map<any, any>;
+  command: ICommandOptions | Map<any, any>;
 }
