@@ -8,6 +8,7 @@ RUN apk add --no-cache \
     make \
     g++ \
     gcc \
+    git \
     libc-dev \
     chromium \
     nss \
@@ -21,9 +22,10 @@ WORKDIR /usr/src/app
 
 # Copy package files
 COPY package*.json ./
+COPY yarn.lock ./
 
-# Install dependencies
-RUN yarn install --network-timeout 1000000
+# Install dependencies with frozen lockfile for better reliability
+RUN yarn install --frozen-lockfile --network-timeout 1000000
 
 # Copy source code
 COPY . .
