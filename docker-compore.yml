@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  wabot:
+    build: .
+    container_name: open-wabot
+    volumes:
+      - ./auth_info_baileys:/usr/src/app/auth_info_baileys
+      - ./temp:/usr/src/app/temp
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Jakarta
