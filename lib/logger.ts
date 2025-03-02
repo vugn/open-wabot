@@ -1,6 +1,6 @@
-import pino from "pino";
 import fs from "fs";
 import path from "path";
+import pino from "pino";
 
 // Define log file path
 const logFilePath = path.join(__dirname, "../logs", "app.log");
@@ -20,14 +20,16 @@ const logger = pino(
       level: (label: string) => ({ level: label }),
     },
     timestamp: pino.stdTimeFunctions.isoTime, // Add timestamp to logs
-    prettyPrint:
-      process.env.NODE_ENV !== "production"
-        ? {
-            colorize: true, // Colorize output for development
-            translateTime: "SYS:standard", // Human-readable time format
-            ignore: "pid,hostname", // Ignore PID and hostname
-          }
-        : false, // Disable pretty print in production
+    transport:
+    {
+      target: "pino-pretty",
+      options: {
+        colorize: true, // Colorize output for development
+        translateTime: "SYS:standard", // Human-readable time format
+        ignore: "pid,hostname", // Ignore PID and hostname
+      },
+    }
+    , // Disable pretty print in production
   },
   pino.multistream([
     { stream: pino.destination(1) }, // Console stream

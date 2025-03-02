@@ -21,13 +21,30 @@ class Exif {
     filename: string = "data"
   ): Promise<void> {
     const json = {
-      "sticker-pack-id": packID,
-      "sticker-pack-name": packname,
-      "sticker-pack-publisher": authorname,
-      "android-app-store-link": playstore,
-      "ios-app-store-link": itunes,
-      emojis: ["😁"],
+      android_play_store_link: playstore,
+      ios_app_store_link: itunes,
+      sticker_packs: [
+        {
+          identifier: packID,
+          name: packname,
+          publisher: authorname,
+          tray_image_file: "placeholder.png",
+          image_data_version: "1",
+          avoid_cache: false,
+          publisher_email: "",
+          publisher_website: "",
+          privacy_policy_website: "",
+          license_agreement_website: "",
+          stickers: [
+            {
+              image_file: `${filename}.webp`,
+              emoji: ["🌟"]
+            }
+          ]
+        }
+      ]
     };
+
 
     let len = new TextEncoder().encode(JSON.stringify(json)).length;
     const f = Buffer.from([

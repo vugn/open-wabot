@@ -25,7 +25,7 @@ function convertImage(
     const out = temp.replace(new RegExp(`\\.${ext1}$`), "") + "." + ext2;
     await fs.promises.writeFile(temp, file);
     ffmpeg(temp)
-      .on("start", (cmd: string) => {})
+      .on("start", (cmd: string) => { })
       .on("error", (e: Error) => {
         fs.unlinkSync(temp);
         reject(e);
@@ -62,24 +62,40 @@ function convertVideo(
     const temp = path.join(__dirname, "../temp", Date.now() + "." + ext1);
     const out = temp.replace(new RegExp(`\\.${ext1}$`), "") + "." + ext2;
     await fs.promises.writeFile(temp, file);
+
     ffmpeg(temp)
-      .on("start", (cmd: string) => {})
+      .on("start", (cmd: string) => { })
       .on("error", (e: Error) => {
         fs.unlinkSync(temp);
         reject(e);
       })
       .on("end", () => {
-        console.log("Finish");
+        console.log("Finish Video Conversion");
         setTimeout(() => {
           fs.unlinkSync(temp);
           fs.unlinkSync(out);
         }, 2000);
         resolve(fs.readFileSync(out));
       })
-      .addOutputOptions(options)
-      .seekInput("00:00")
-      .setDuration("00:05")
+      .addOutputOptions([
+        "-vcodec",
+        "libwebp",
+        "-vf",
+        // Improved video filter settings
+        "scale=512:512:flags=lanczos:force_original_aspect_ratio=decrease,format=rgba,pad=512:512:(ow-iw)/2:(oh-ih)/2:color=#00000000,setsar=1",
+        "-loop",
+        "0",
+        "-preset",
+        "default",
+        "-an",
+        "-vsync",
+        "0",
+        "-s",
+        "512:512",
+        ...options
+      ])
       .toFormat(ext2)
+      .setDuration(3)  // Set to 3 seconds max
       .save(out);
   });
 }
@@ -94,13 +110,13 @@ async function sticker(file: Buffer, opts: any): Promise<Buffer | undefined> {
   if (typeof opts.cmdType === "undefined") opts.cmdType = "1";
   const cmd: { [key: number]: string[] } = {
     1: [
-      "-fs 1M",
+      "-fs 2M",
       "-vcodec",
       "libwebp",
       "-vf",
       `scale=512:512:flags=lanczos:force_original_aspect_ratio=decrease,format=rgba,pad=512:512:(ow-iw)/2:(oh-ih)/2:color=#00000000,setsar=1`,
     ],
-    2: ["-fs 1M", "-vcodec", "libwebp"],
+    2: ["-fs 2M", "-vcodec", "libwebp"],
   };
 
   if (opts.withPackInfo) {

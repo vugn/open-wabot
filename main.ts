@@ -10,6 +10,7 @@ import readFeatures from "./lib/readFeatures";
 import { FeatureAttribute } from "./types/attributes";
 import { Msg } from "./types/message";
 
+
 // Initialize attributes object
 const attr: FeatureAttribute = {
   uptime: new Date(),
@@ -118,42 +119,45 @@ async function connectToWhatsApp() {
     function handleDisconnect(error: Error | undefined) {
       const reason = new Boom(error).output.statusCode;
 
-      // Handle specific disconnect reasons
       switch (reason) {
         case DisconnectReason.badSession:
           console.log("Bad Session File, Please Delete session and Scan Again");
           sock?.logout();
+          setTimeout(startBot, 5000);
           break;
         case DisconnectReason.connectionClosed:
           console.log("Connection closed, reconnecting...");
-          connectToWhatsApp();
+          setTimeout(startBot, 5000);
           break;
         case DisconnectReason.connectionLost:
           console.log("Connection Lost from Server, reconnecting...");
-          connectToWhatsApp();
+          setTimeout(startBot, 5000);
           break;
         case DisconnectReason.connectionReplaced:
           console.log(
             "Connection Replaced, Another New Session Opened, Please Close Current Session First"
           );
           sock?.logout();
+          setTimeout(startBot, 5000);
           break;
         case DisconnectReason.loggedOut:
           console.log(
             "Device Logged Out, Please Delete session and Scan Again."
           );
           sock?.logout();
+          setTimeout(startBot, 5000);
           break;
         case DisconnectReason.restartRequired:
           console.log("ReconnectToWhatsApp Required, Reconnecting...");
-          connectToWhatsApp();
+          setTimeout(startBot, 5000);
           break;
         case DisconnectReason.timedOut:
           console.log("Connection TimedOut, Reconnecting...");
-          connectToWhatsApp();
+          setTimeout(startBot, 5000);
           break;
         default:
           sock?.end(Error(`Unknown DisconnectReason: ${reason}|${error}`));
+          setTimeout(startBot, 5000);
       }
     }
 
@@ -169,5 +173,15 @@ async function connectToWhatsApp() {
   }
 }
 
+async function startBot() {
+  try {
+    await connectToWhatsApp();
+  } catch (error) {
+    console.error('Bot crashed with error:', error);
+    console.log('Restarting bot in 5 seconds...');
+    setTimeout(startBot, 5000);
+  }
+}
+
 // Run in main file
-connectToWhatsApp();
+startBot();

@@ -55,7 +55,7 @@ const stickerCommand: ICommandOptions = {
         withPackInfo: false,
         packInfo: {
           author: "Open WABOT",
-          packname: "Open WABOT Sticker Pack",
+          packname: "github.com/vugn",
         },
         cmdType: "1",
       };
