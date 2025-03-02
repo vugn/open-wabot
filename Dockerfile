@@ -30,9 +30,6 @@ RUN yarn install --frozen-lockfile --network-timeout 1000000
 # Copy source code
 COPY . .
 
-# Build TypeScript
-RUN yarn build
-
 # Create temp directory for stickers
 RUN mkdir -p temp
 
