@@ -19,6 +19,10 @@ async function handler(
     const { isGroup, sender, body, from, isSelf, raw, id } = msg;
     const groups = await conn.groupMetadata(from);
 
+    // Define bot owner number(s)
+    const ownerNumbers = ["85156712795@s.whatsapp.net", "6285156712795@s.whatsapp.net"];
+    const isOwner = ownerNumbers.includes(sender);
+
     // Function to get admin users in a group
     async function getAdmin() {
       try {
@@ -39,8 +43,7 @@ async function handler(
 
     if (isGroup) {
       logger.info(
-        `Message ${body} from ${sender} in ${
-          isGroup ? "group" : "private"
+        `Message ${body} from ${sender} in ${isGroup ? "group" : "private"
         } chat`
       );
       // logger.info(raw);
@@ -86,6 +89,7 @@ async function handler(
             isGroup,
             isPrivate,
             isSelf,
+            isOwner
           }
         );
       } catch (error) {

@@ -51,6 +51,7 @@ export interface IRunMessage {
   isPrivate?: boolean | undefined;
   isBotAdmin?: boolean | undefined;
   isSelf?: boolean | undefined;
+  isOwner?: boolean | undefined;
 }
 export interface ICommandOptions extends ICommandOptionsMap {
   name: string;
